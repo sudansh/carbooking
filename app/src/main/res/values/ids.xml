@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="activity_parent_view" type="id">50</item>
+    <item name="parent_view" type="id">100</item>
+    <item name="map" type="id">200</item>
+    <item name="tab_id_live" type="id">300</item>
+    <item name="tab_id_available" type="id">400</item>
+    <item name="tab_id" type="id">500</item>
+    <item name="chipgroup_id" type="id">600</item>
+    <item name="progress_id" type="id">700</item>
+    <item name="pager_id" type="id">800</item>
+</resources>
