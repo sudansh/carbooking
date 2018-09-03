@@ -20,5 +20,4 @@ class App : Application() {
         }
         startKoin(listOf(appModule, remoteModule, localModule))
     }
-
 }

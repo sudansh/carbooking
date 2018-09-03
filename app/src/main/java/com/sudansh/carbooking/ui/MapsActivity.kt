@@ -26,10 +26,13 @@ import com.google.maps.android.clustering.ClusterManager
 import com.sudansh.carbooking.R
 import com.sudansh.carbooking.data.Resource
 import com.sudansh.carbooking.data.Status
-import com.sudansh.carbooking.repository.entity.Availability
 import com.sudansh.carbooking.repository.entity.CabLive
+import com.sudansh.carbooking.repository.response.Availability
+import com.sudansh.carbooking.repository.response.AvailabilityResponse
+import com.sudansh.carbooking.util.action
 import com.sudansh.carbooking.util.coordinate
 import com.sudansh.carbooking.util.observeNonNull
+import com.sudansh.carbooking.util.snack
 import org.koin.android.architecture.ext.viewModel
 
 
@@ -93,16 +96,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, TabLayout.OnTabSel
         }
     }
 
-    private fun updateAvailable(resource: Resource<List<Availability>>) {
+    private fun updateAvailable(resource: Resource<AvailabilityResponse>) {
         when (resource.status) {
             Status.SUCCESS -> {
-                buidAvailableMakers(resource.data.orEmpty())
+                buidAvailableMakers(resource.data?.data.orEmpty())
                 progressBar.visibility = View.GONE
             }
             Status.LOADING -> {
                 progressBar.visibility = View.VISIBLE
             }
             Status.ERROR -> {
+                parentView.snack("Couldn't fetch!") {
+                    action("Retry") { viewModel.availabilityRefresh() }
+                }
                 progressBar.visibility = View.GONE
             }
         }
@@ -118,6 +124,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, TabLayout.OnTabSel
                 progressBar.visibility = View.VISIBLE
             }
             Status.ERROR -> {
+                parentView.snack("Couldn't fetch!") {
+                    action("Retry") { viewModel.getLive() }
+                }
                 progressBar.visibility = View.GONE
             }
         }

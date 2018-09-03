@@ -5,8 +5,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudansh.carbooking.data.Resource
 import com.sudansh.carbooking.repository.CabRepository
-import com.sudansh.carbooking.repository.entity.Availability
 import com.sudansh.carbooking.repository.entity.CabLive
+import com.sudansh.carbooking.repository.response.AvailabilityResponse
 import com.sudansh.carbooking.testing.OpenForTesting
 import com.sudansh.carbooking.util.minSlots
 import com.sudansh.carbooking.util.switch
@@ -22,7 +22,7 @@ class MapsViewModel(private val repo: CabRepository) : ViewModel() {
     val cabLive: LiveData<Resource<List<CabLive>>> = refresh.switch { isFetch ->
         repo.getCabLive(isFetch)
     }
-    val availability: LiveData<Resource<List<Availability>>> = timePair.switch { times ->
+    val availability: LiveData<Resource<AvailabilityResponse>> = timePair.switch { times ->
         repo.getAvailability(times.first, times.second)
     }
 
@@ -30,12 +30,18 @@ class MapsViewModel(private val repo: CabRepository) : ViewModel() {
         firstTabActive.value = true
     }
 
-    fun getLive(isFetch: Boolean) {
+    fun getLive(isFetch: Boolean = false) {
         refresh.value = isFetch
     }
 
     fun getAvailability(starttime: Long, endtime: Long) {
         timePair.value = Pair(starttime, endtime)
+    }
+
+    fun availabilityRefresh() {
+        timePair.value?.let {
+            timePair.value = it
+        }
     }
 
     /**
@@ -44,7 +50,7 @@ class MapsViewModel(private val repo: CabRepository) : ViewModel() {
     fun getAvailabilityFromSlot(position: Int) {
         val oneHourFromNow = Date().apply { Date(this.time + TimeUnit.MINUTES.toMillis(60)) }
         val end = Date(oneHourFromNow.time + TimeUnit.MINUTES.toMillis(minSlots[position].first))
-        getAvailability(oneHourFromNow.time/1000, end.time/1000)
+        getAvailability(oneHourFromNow.time / 1000, end.time / 1000)
     }
 
     fun setFirstTabActive(b: Boolean) {

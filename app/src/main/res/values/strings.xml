@@ -1,14 +1,7 @@
 <resources>
     <string name="app_name">carbooking</string>
     <string name="title_activity_maps">Map</string>
-    <string name="live_cars">Live Cars</string>
-    <string name="availability">Availability</string>
     <string name="hide_on_trip">Hide cars on trip</string>
-    <string name="slot_1">1 Hour</string>
-    <string name="slot_2">5 Hours</string>
-    <string name="slot_3">10 DaHoursy</string>
-    <string name="slot_4">1 Day</string>
-    <string name="slot_5">2 Days</string>
 
     //tab title
     <string name="tab_title_live">Live</string>

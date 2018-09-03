@@ -9,12 +9,9 @@ import org.koin.dsl.module.applicationContext
 
 val localModule = applicationContext {
     bean { AppExecutors() }
-    bean { CabRepository(get(), get(), get(), get(), get(), get()) }
+    bean { CabRepository(get(), get(), get()) }
     bean {
         Room.databaseBuilder(get(), AppDatabase::class.java, "car-db").build()
     }
     bean { get<AppDatabase>().cabLiveDao() }
-    bean { get<AppDatabase>().availabilityDao() }
-    bean { get<AppDatabase>().dropoffDao() }
-    bean { get<AppDatabase>().joinDao() }
 }
