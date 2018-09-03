@@ -10,6 +10,7 @@ class LiveFragment : BaseFragment() {
 
     private val checkIsOnTrip by lazy {
         CheckBox(activity).apply {
+            id = R.id.cb_live_id
             setText(R.string.hide_on_trip)
             layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
                 addRule(BELOW, R.id.tab_id)

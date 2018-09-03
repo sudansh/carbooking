@@ -1,10 +1,8 @@
 package com.sudansh.carbooking
 
-import com.sudansh.carbooking.repository.entity.Availability
 import com.sudansh.carbooking.repository.entity.CabLive
 import com.sudansh.carbooking.repository.entity.CabLiveResponse
-import com.sudansh.carbooking.repository.entity.DropoffLocation
-import com.sudansh.carbooking.repository.response.AvailabilityItemResponse
+import com.sudansh.carbooking.repository.response.Availability
 import com.sudansh.carbooking.repository.response.AvailabilityResponse
 
 
@@ -22,11 +20,5 @@ fun createCabLiveResponse(lat: String, lng: String, count: Int = 10): CabLiveRes
 fun createAvailability(id: Int, cars: Int, lat: Double, lng: Double) = Availability(id, cars, listOf(lat, lng))
 fun createAvailabilityResponse(cars: Int, lat: Double, lng: Double, count: Int = 10) = AvailabilityResponse(
         (1 until count).map {
-            AvailabilityItemResponse(it, cars, createDropListResponse(it, lat+it, lng+it), listOf(lat, lng))
+            Availability(it, cars, listOf(lat, lng))
         })
-
-fun createDropListResponse(id: Int, lat: Double, lng:Double) =
-    (1 until 10).map {
-        DropoffLocation(id, listOf(lat, lng))
-    }
-

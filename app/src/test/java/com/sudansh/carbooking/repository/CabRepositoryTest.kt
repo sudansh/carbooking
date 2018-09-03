@@ -8,8 +8,8 @@ import com.sudansh.carbooking.createAvailabilityResponse
 import com.sudansh.carbooking.createCabLiveResponse
 import com.sudansh.carbooking.data.Resource
 import com.sudansh.carbooking.repository.dao.CabLiveDao
-import com.sudansh.carbooking.repository.entity.Availability
 import com.sudansh.carbooking.repository.entity.CabLive
+import com.sudansh.carbooking.repository.response.AvailabilityResponse
 import com.sudansh.carbooking.util.InstantAppExecutors
 import com.sudansh.carbooking.util.mock
 import org.junit.Rule
@@ -24,9 +24,7 @@ class CabRepositoryTest {
     private val cabLiveDao = mock(CabLiveDao::class.java)
     private val api = mock(ApiService::class.java)
 
-    private val repo = CabRepository(InstantAppExecutors(),
-            cabLiveDao,
-            api)
+    private val repo = CabRepository(InstantAppExecutors(), cabLiveDao, api)
     @Rule
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -58,23 +56,10 @@ class CabRepositoryTest {
     }
 
     @Test
-    fun testAvailabilityData() {
-        val dbData = MutableLiveData<List<Availability>>()
-        `when`(availabilityDao.findAll()).thenReturn(dbData)
-
+    fun testAvailability() {
         val call = ApiUtil.successCall(createAvailabilityResponse(5, 123.0, 456.0, 10))
         `when`(api.getAvailability(anyLong(), anyLong())).thenReturn(call)
-        val observer = mock<Observer<Resource<List<Availability>>>>()
-
-        //fetch data from db
-        repo.getAvailability(100, 200).observeForever(observer)
-
-        //verify no apiService is called
-        verify(api, never()).getAvailability(100, 200)
-
-        val updatedDbData = MutableLiveData<List<Availability>>()
-        `when`(availabilityDao.findAll()).thenReturn(updatedDbData)
-        dbData.value = null
+        val observer = mock<Observer<Resource<AvailabilityResponse>>>()
 
         //force fetch from apiService
         repo.getAvailability(100, 200).observeForever(observer)
@@ -82,4 +67,5 @@ class CabRepositoryTest {
         //verify apiService is called
         verify(api).getAvailability(100, 200)
     }
+
 }
