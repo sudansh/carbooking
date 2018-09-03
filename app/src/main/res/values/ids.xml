@@ -8,4 +8,5 @@
     <item name="progress_id" type="id">700</item>
     <item name="pager_id" type="id">800</item>
     <item name="cb_live_id" type="id">900</item>
+    <item name="fab_id" type="id">910</item>
 </resources>

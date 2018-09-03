@@ -63,7 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, TabLayout.OnTabSel
         CustomViewPager(this).apply {
             id = R.id.pager_id
             adapter = CarPagerAdapter(this@MapsActivity, this@MapsActivity.supportFragmentManager)
-            layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+            layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT).apply {
                 addRule(BELOW, R.id.tab_id)
             }
         }
