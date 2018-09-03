@@ -20,7 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.sudansh.carbooking.R
@@ -30,7 +30,6 @@ import com.sudansh.carbooking.repository.entity.CabLive
 import com.sudansh.carbooking.repository.response.Availability
 import com.sudansh.carbooking.repository.response.AvailabilityResponse
 import com.sudansh.carbooking.util.action
-import com.sudansh.carbooking.util.coordinate
 import com.sudansh.carbooking.util.observeNonNull
 import com.sudansh.carbooking.util.snack
 import org.koin.android.architecture.ext.viewModel
@@ -135,27 +134,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, TabLayout.OnTabSel
     private fun buildMarkers(list: List<CabLive>) {
         val clusterList: List<CabLive> = if (viewModel.hideOnTrip)
             list.filter { it.is_on_trip } else list
+        val bounds = LatLngBounds.Builder()
+        list.forEach { bounds.include(it.position) }
         clusterManager?.let {
             it.clearItems()
             it.addItems(clusterList)
             it.cluster()
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(list[0].latitude.coordinate(), list[0].longitude.coordinate()), 12f))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 30))
         }
     }
 
-    private fun buidAvailableMakers(listAvailable: List<Availability>) {
+    private fun buidAvailableMakers(list: List<Availability>) {
+        val bounds = LatLngBounds.Builder()
+        list.forEach { bounds.include(it.position) }
         clusterManager?.let {
             it.clearItems()
-            it.addItems(listAvailable)
+            it.addItems(list)
             it.cluster()
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(listAvailable[0].location[0], listAvailable[0].location[1]), 12f))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 30))
         }
     }
 
     private fun constructLayout() {
         //Add map
-        val frameLayout = FrameLayout(this)
-        frameLayout.id = R.id.map
+        val frameLayout = FrameLayout(this).apply {
+            id = R.id.map
+        }
         val supportMapFragment = SupportMapFragment()
         supportFragmentManager.beginTransaction().add(R.id.map, supportMapFragment).commit()
         supportMapFragment.getMapAsync(this)
